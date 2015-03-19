@@ -1,0 +1,35 @@
+{
+  "name": "TOR Client",
+  "id": "torclient",
+  "description": {
+    "en": "TOR Client",
+    "fr": "Client TOR"
+  },
+  "license": "AGPL-3",
+  "developer": {
+    "name": "Emile Morel",
+    "email": "emile@bleuchtang.fr"
+  },
+  "multi_instance": "false",
+  "arguments": {
+    "install" : [
+      {
+        "name": "domain",
+        "ask": {
+            "en": "Choose a domain for the web administration",
+            "fr": "Choisissez un domaine pour l'administration web"
+        },
+        "example": "domain.org"
+      },
+      {
+        "name": "path",
+        "ask": {
+            "en": "Choose a path for the web administration",
+            "fr": "Choissez un chemin pour l'administration web"
+        },
+        "example": "/torclient",
+        "default": "/torclient"
+      }
+    ]
+  }
+}

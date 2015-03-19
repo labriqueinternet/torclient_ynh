@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# VPN Client app for YunoHost 
+# Copyright (C) 2015 Emile Morel <emile@bleuchtang.fr>
+# Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
+# Contribute at https://github.com/bleuchtang/torclient_ynh
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Retrieve arguments
+domain=${1}
+url_path=${2}
+
+# Check domain/path availability
+sudo yunohost app checkurl ${domain}${url_path} -a torclient
+if [ ! $? -eq 0 ]; then
+  exit 1
+fi
+
+if [ ! -e /tmp/.ynh-hotspot-started ]; then
+  echo "hotspot not started and/or not installed" 
+fi
+
+echo 'deb http://deb.torproject.org/torproject.org wheezy main' | sudo tee "/etc/apt/sources.list.d/torproject.list"
+
+gpg --keyserver keys.gnupg.net --recv 886DDD89
+gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
+
+# Install packages
+#packages='privoxy tor php5-fpm'
+packages='tor php5-fpm'
+sudo apt-get update
+DEBIAN_FRONTEND=noninteractive sudo apt-get --assume-yes --force-yes install ${packages}
+
+# Save arguments
+#sudo yunohost app setting torclient server_name -v "${server_name}"
+
+sudo install -o root -g root -m 0644 ../conf/torrc /etc/tor/torrc
+sudo install -b -o root -g root -m 0644 ../conf/nginx_torclient.conf "/etc/nginx/conf.d/${domain}.d/torclient.conf"
+sudo install -b -o root -g root -m 0644 ../conf/phpfpm_torclient.conf /etc/php5/fpm/pool.d/torclient.conf
+
+# Copy web sources
+sudo mkdir -pm 0755 /var/www/torclient/
+sudo cp -a ../sources/* /var/www/torclient/
+
+sudo chown -R root: /var/www/torclient/
+sudo chmod -R 0644 /var/www/torclient/*
+sudo find /var/www/torclient/ -type d -exec chmod +x {} \;
+
+# Fix confs
+## nginx
+sudo sed "s|<TPL:NGINX_LOCATION>|${url_path}|g" -i "/etc/nginx/conf.d/${domain}.d/torclient.conf"
+sudo sed 's|<TPL:NGINX_REALPATH>|/var/www/torclient/|g' -i "/etc/nginx/conf.d/${domain}.d/torclient.conf"
+sudo sed 's|<TPL:PHP_NAME>|torclient|g' -i "/etc/nginx/conf.d/${domain}.d/torclient.conf"
+
+## php-fpm
+sudo sed 's|<TPL:PHP_NAME>|torclient|g' -i /etc/php5/fpm/pool.d/torclient.conf
+sudo sed 's|<TPL:PHP_USER>|admin|g' -i /etc/php5/fpm/pool.d/torclient.conf
+sudo sed 's|<TPL:PHP_GROUP>|admins|g' -i /etc/php5/fpm/pool.d/torclient.conf
+sudo sed 's|<TPL:NGINX_REALPATH>|/var/www/torclient/|g' -i /etc/php5/fpm/pool.d/torclient.conf
+sudo sed 's|^;\?\s*max_execution_time.\+|max_execution_time = 600|' -i /etc/php5/fpm/php.ini
+
+# Fix sources
+sudo sed "s|<TPL:NGINX_LOCATION>|${url_path}|g" -i /var/www/torclient/config.php
+
+# Copy init script
+sudo install -o root -g root -m 0755 ../conf/init_ynh-torclient /etc/init.d/ynh-torclient
+
+# Set default inits
+#php-fpm is already installed by yunohost hotspot app
+sudo service php-fpm stop
+sudo service php-fpm start
+sudo service nginx reload
+
+# Update SSO for vpnadmin
+sudo yunohost app ssowatconf
+
+# Start tor client
+service torclient start
+
+exit 0

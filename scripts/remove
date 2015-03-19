@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Tor Client app for YunoHost 
+# Copyright (C) 2015 Emile Morel <emile@bleuchtang.fr>
+# Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
+# Contribute at https://github.com/bleuchtang/torclient_ynh
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Retrieve arguments
+domain=$(sudo yunohost app setting torclient domain)
+
+# The End
+sudo service ynh-torclient stop
+sudo yunohost service remove ynh-torclient
+sudo rm -f /etc/init.d/ynh-torclient
+sudo rm -f /tmp/.ynh-torclient-*
+
+# Remove confs
+sudo rm -rf /etc/tor*
+sudo rm -f /etc/nginx/conf.d/${domain}.d/torclient.conf
+sudo rm -f /etc/php5/fpm/pool.d/torclient.conf
+
+# Restart services
+sudo yunohost service stop php5-fpm
+sudo yunohost service start php5-fpm
+sudo service nginx reload
+
+# Remove sources
+sudo rm -rf /var/www/torclient/
+
+sudo rm -rf /etc/apt/sources.list.d/torproject.list 
+sudo apt-get update
+
+# Remove packets
+# The yunohost policy is currently to not uninstall packets (dependency problems)
+sudo apt-get --assume-yes --force-yes remove tor torsocks
+
+exit 0
