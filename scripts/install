@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# VPN Client app for YunoHost 
+# Tor Client app for YunoHost 
 # Copyright (C) 2015 Emile Morel <emile@bleuchtang.fr>
 # Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
 # Contribute at https://github.com/bleuchtang/torclient_ynh
@@ -88,5 +88,8 @@ sudo yunohost app ssowatconf
 
 # Start tor client
 service torclient start
+
+# Start tor client at boot 
+insserv torclient
 
 exit 0
