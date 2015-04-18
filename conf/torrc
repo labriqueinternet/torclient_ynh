@@ -90,12 +90,13 @@ SocksPolicy reject *
 
 ## The IP address or full DNS name for incoming connections to your
 ## relay. Leave commented out and Tor will guess.
+VirtualAddrNetwork 10.192.0.0/10
 Address ns0.ldn-fai.net
 DNSPort 9053
-DNSListenAddress 10.0.242.1 
+DNSListenAddress 10.0.242.1
 AutomapHostsOnResolve 1
 AutomapHostsSuffixes .exit,.onion
-TransPort 9040                                                          
+TransPort 9040
 TransListenAddress 10.0.242.1
 
 ## If you have multiple network interfaces, you can specify one for

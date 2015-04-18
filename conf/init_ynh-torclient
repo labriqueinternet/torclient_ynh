@@ -37,10 +37,8 @@ is_running() {
 
 set_nat() {
 
-  iptables -t nat -F
-  iptables -t nat -X
   iptables -t nat -A PREROUTING -i ${ynh_wifi_device} -p udp --dport 53 -j REDIRECT --to-ports 9053
-  iptables -t nat -A PREROUTING -i ${ynh_wifi_device} -p tcp --syn -j REDIRECT --to-ports 9040
+  iptables -t nat -A PREROUTING -i ${ynh_wifi_device} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
 }
 
 set_forwarding() {
@@ -52,7 +50,7 @@ unset_nat() {
   internet_device=${1}
 
   iptables -t nat -D PREROUTING -i ${ynh_wifi_device} -p udp --dport 53 -j REDIRECT --to-ports 9053
-  iptables -t nat -D PREROUTING -i ${ynh_wifi_device} -p tcp --syn -j REDIRECT --to-ports 9040
+  iptables -t nat -D PREROUTING -i ${ynh_wifi_device} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
 }
 
 stop_tor() {
