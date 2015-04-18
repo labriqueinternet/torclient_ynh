@@ -27,6 +27,10 @@ sudo yunohost service remove ynh-torclient
 sudo rm -f /etc/init.d/ynh-torclient
 sudo rm -f /tmp/.ynh-torclient-*
 
+# Update firewall for DHCP
+sudo yunohost firewall disallow UDP 9053
+sudo yunohost firewall disallow TCP 9040
+
 # Remove confs
 sudo rm -rf /etc/tor*
 sudo rm -f /etc/nginx/conf.d/${domain}.d/torclient.conf

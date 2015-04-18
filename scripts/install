@@ -77,6 +77,10 @@ sudo sed "s|<TPL:NGINX_LOCATION>|${url_path}|g" -i /var/www/torclient/config.php
 # Copy init script
 sudo install -o root -g root -m 0755 ../conf/init_ynh-torclient /etc/init.d/ynh-torclient
 
+# Update firewall for DHCP
+sudo yunohost firewall allow --no-upnp UDP 9053
+sudo yunohost firewall allow --no-upnp TCP 9040
+
 # Set default inits
 #php-fpm is already installed by yunohost hotspot app
 sudo service php-fpm stop
