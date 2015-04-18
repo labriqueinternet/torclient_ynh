@@ -92,6 +92,7 @@ sudo yunohost app ssowatconf
 
 # Start tor client
 service ynh-torclient start
+service tor restart
 
 # Start tor client at boot 
 insserv ynh-torclient
