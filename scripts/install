@@ -91,10 +91,11 @@ sudo service nginx reload
 sudo yunohost app ssowatconf
 
 # Start tor client
-service ynh-torclient start
-service tor restart
+sudo service ynh-torclient stop
+sudo yunohost service disable tor
+sudo service ynh-torclient start
 
 # Start tor client at boot 
-insserv ynh-torclient
+sudo insserv ynh-torclient
 
 exit 0
