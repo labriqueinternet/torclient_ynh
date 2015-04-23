@@ -92,6 +92,7 @@ sudo yunohost app ssowatconf
 
 # Start tor client
 sudo service ynh-torclient stop
+sudo yunohost service stop tor
 sudo yunohost service disable tor
 sudo service ynh-torclient start
 
