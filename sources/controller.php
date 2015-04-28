@@ -43,6 +43,9 @@ dispatch('/', function() {
   $wifi_ssid_list='';
   $ssids = getArray(moulinette_get_hotspot('wifi_ssid'));
   $wifi_ssid = moulinette_get('wifi_ssid');
+  if ($wifi_ssid == "notset") {
+    $ssid='';
+  }
   foreach ($ssids as $ssid){
     $active = ($ssid == $wifi_ssid) ? 'class="active"' : '';
     $wifi_ssid_list .= "<li $active><a href='#'>$ssid</a></li>\n";
@@ -58,6 +61,7 @@ dispatch('/', function() {
 dispatch_put('/settings', function() {
 
   $status = isset($_POST['status']) ? 1 : 0;
+  $wifi_ssid = $_POST['wifi_ssid'];
 
   moulinette_set('status', $status);
   moulinette_set('wifi_ssid', $wifi_ssid);
