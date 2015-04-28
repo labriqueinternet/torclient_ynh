@@ -90,10 +90,10 @@ sudo service nginx reload
 # Update SSO for vpnadmin
 sudo yunohost app ssowatconf
 
-# Start tor client
+# Stop tor client
 sudo service ynh-torclient stop
-sudo yunohost service stop tor
-sudo yunohost service disable tor
+sudo service tor stop
+sudo insserv -d tor
 #sudo service ynh-torclient start
 sudo yunohost app setting torclient wifi_ssid -v notset
 sudo yunohost app setting torclient wifi_device_old -v notset
