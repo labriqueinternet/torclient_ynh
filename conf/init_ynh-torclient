@@ -179,7 +179,7 @@ echo "Retrieving Yunohost settings... "
 torclient_wifi_ssid=$(moulinette_torclient_get wifi_ssid)
 torclient_wifi_device_old=$(moulinette_torclient_get wifi_device_old)
 if [ "$torclient_wifi_ssid" == "notset" ] ; then
-  echo "Essid is not set for torclient"
+  echo "[ERR] Essid is not set for torclient"
   exit 1
 fi
 if [ "$torclient_wifi_device_old" == "notset" ] && [ "$1" == "stop" ] ; then
