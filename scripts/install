@@ -95,8 +95,8 @@ sudo service ynh-torclient stop
 sudo yunohost service stop tor
 sudo yunohost service disable tor
 #sudo service ynh-torclient start
-yunohost app setting torclient wifi_ssid -v notset
-yunohost app setting torclient wifi_device_old -v notset
+sudo yunohost app setting torclient wifi_ssid -v notset
+sudo yunohost app setting torclient wifi_device_old -v notset
 
 # Start tor client at boot 
 sudo insserv ynh-torclient
