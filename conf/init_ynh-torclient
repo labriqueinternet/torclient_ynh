@@ -197,7 +197,7 @@ for i in $(seq 0 $((${ynh_multissid} - 1))); do
 done
 
 if [ ! $torclient_wifi_device ] ; then
-  echo "SSID not found for torclient"
+  echo "[ERR] SSID not found for torclient"
   exit 1
 fi
 
