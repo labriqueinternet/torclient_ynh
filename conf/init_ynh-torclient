@@ -24,7 +24,7 @@ has_hotspot_app() {
 }
 
 is_nat_set() {
-  iptables -nvt nat -L PREROUTING | grep REDIRECT | grep -q "${torclient_wifi_device}"
+  iptables -nvt nat -L PREROUTING | grep REDIRECT | grep -q "${torclient_wifi_device_old}"
 }
 
 is_tor_running() {
@@ -181,7 +181,7 @@ torclient_wifi_device_old=$(moulinette_torclient_get wifi_device_old)
 if [ "$torclient_wifi_ssid" == "notset" ] ; then
   echo "Essid is not set for torclient"
   exit 1
-then
+fi
 if [ "$torclient_wifi_device_old" == "notset" ] && [ "$1" == "stop" ] ; then
   echo "Torclient never started"
   exit 1
@@ -189,14 +189,17 @@ fi
 IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_get wifi_ssid)"
 ynh_multissid=$(moulinette_get multissid)
 for i in $(seq 0 $((${ynh_multissid} - 1))); do
-  if [ "${ynh_wifi_ssid[$i]}" == "${torclient_wifi_ssid}" ] ; then
+  if [ ${ynh_wifi_ssid[$i]} == ${torclient_wifi_ssid} ] ; then
     torclient_wifi_device="ssid${i}"
     echo "Torclient will be active on $torclient_wifi_device device and $torclient_wifi_ssid SSID"
     break
   fi
+done
+
+if [ ! $torclient_wifi_device ] ; then
   echo "SSID not found for torclient"
   exit 1
-done	
+fi
 
 echo "OK"
 
