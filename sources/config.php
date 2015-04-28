@@ -4,9 +4,9 @@
 function configure() {
     option('env', ENV_PRODUCTION);
     option('debug', false);
-    option('base_uri', '<TPL:NGINX_LOCATION>/');
+    option('base_uri', '/torclient/');
     layout("layout.html.php");
-    define('PUBLIC_DIR', '<TPL:NGINX_LOCATION>/public');
+    define('PUBLIC_DIR', '/torclient/public');
 }
 
 // Not found page

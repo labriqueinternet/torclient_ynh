@@ -34,6 +34,18 @@
               </div>
             </div>
           </div>
+          <div class="form-group">
+            <label for="wifi_ssid" class="col-sm-3 control-label"><?= T_('SSID') ?></label>
+            <div class="col-sm-9 input-group-btn">
+              <div class="input-group">
+                  <input type="text" name="wifi_ssid" id="wifi_ssid" value="<?= $wifi_ssid ?>" style="display: none" />
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?= $wifi_ssid ?> <span class="caret"></span></button>
+                  <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                    <?= $wifi_ssid_list ?>
+                  </ul>
+              </div>
+            </div>
+          </div>
 	</div>
       </div>
       <div class="form-group">

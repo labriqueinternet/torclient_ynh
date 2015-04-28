@@ -24,7 +24,7 @@ has_hotspot_app() {
 }
 
 is_nat_set() {
-  iptables -nvt nat -L PREROUTING | grep REDIRECT | grep -q "${ynh_wifi_device}"
+  iptables -nvt nat -L PREROUTING | grep REDIRECT | grep -q "${torclient_wifi_device}"
 }
 
 is_tor_running() {
@@ -37,8 +37,8 @@ is_running() {
 
 set_nat() {
 
-  iptables -t nat -A PREROUTING -i ${ynh_wifi_device} -p udp --dport 53 -j REDIRECT --to-ports 9053
-  iptables -t nat -A PREROUTING -i ${ynh_wifi_device} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
+  iptables -t nat -A PREROUTING -i ${torclient_wifi_device} -p udp --dport 53 -j REDIRECT --to-ports 9053
+  iptables -t nat -A PREROUTING -i ${torclient_wifi_device} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
 }
 
 set_forwarding() {
@@ -49,8 +49,8 @@ set_forwarding() {
 unset_nat() {
   internet_device=${1}
 
-  iptables -t nat -D PREROUTING -i ${ynh_wifi_device} -p udp --dport 53 -j REDIRECT --to-ports 9053
-  iptables -t nat -D PREROUTING -i ${ynh_wifi_device} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
+  iptables -t nat -D PREROUTING -i ${torclient_wifi_device_old} -p udp --dport 53 -j REDIRECT --to-ports 9053
+  iptables -t nat -D PREROUTING -i ${torclient_wifi_device_old} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
 }
 
 stop_tor() {
@@ -76,10 +76,10 @@ moulinette_get() {
   echo "${value}"
 } 
 
-moulinette_vpnclient_get() {
+moulinette_torclient_get() {
   var=${1}
 
-  value=$(yunohost app setting vpnclient "${var}")
+  value=$(yunohost app setting torclient "${var}")
 
   if [[ "${value}" =~ "An instance is already running" ]]; then
     echo "${value}" >&2
@@ -93,12 +93,77 @@ moulinette_set() {
   var=${1}
   value=${2}
 
-  msg=$(yunohost app setting hotspot "${var}" -v "${value}")
+  msg=$(yunohost app setting torclient "${var}" -v "${value}")
 
   if [ ! $? -eq 0 ]; then
     echo "${msg}" >&2
     exit 1
   fi
+}
+
+do_start() {
+  if is_running; then
+    echo "Already started"
+  else
+    echo "[torclient] Starting..."
+    touch /tmp/.ynh-tor-started
+
+    # Run tor
+    if ! is_tor_running; then
+      echo "Run Tor"
+      start_tor
+    fi
+
+    # Set ipv4 NAT
+    if ! is_nat_set; then
+      echo "Set NAT settings"
+      set_nat
+    fi
+  fi
+  moulinette_set wifi_device_old $torclient_wifi_device
+}
+
+do_stop() {
+  if ! is_running; then
+    echo "Already stoped"
+  else
+    echo "[torclient] Stopping..."
+    rm /tmp/.ynh-tor-started
+  
+    if is_nat_set; then
+      echo "Unset NAT"
+      unset_nat
+    fi
+
+    if is_tor_running; then
+      echo "Stop Tor"
+      stop_tor
+    fi
+  
+    if has_vpnclient_app; then
+      service ynh-vpnclient start
+    fi
+  fi
+}
+
+do_status() {
+  exitcode=0
+
+  if is_tor_running; then
+    echo "[OK] Tor is running"
+  else
+    echo "[ERR] Tor is not running"
+    exitcode=1
+  fi
+
+  if is_nat_set; then
+    echo "[OK] IPv4 nat rules set"
+  else
+    echo "[ERR] No IPv4 nat rules not set"
+    exitcode=1
+  fi
+
+  exit ${exitcode}
 }
 
 # Restart php5-fpm at the first start (it needs to be restarted after the slapd start)
@@ -109,9 +174,29 @@ fi
 
 # Variables
 
-echo -n "Retrieving Yunohost settings... "
+echo "Retrieving Yunohost settings... "
 
-ynh_wifi_device=$(moulinette_get wifi_device)
+torclient_wifi_ssid=$(moulinette_torclient_get wifi_ssid)
+torclient_wifi_device_old=$(moulinette_torclient_get wifi_device_old)
+if [ "$torclient_wifi_ssid" == "notset" ] ; then
+  echo "Essid is not set for torclient"
+  exit 1
+then
+if [ "$torclient_wifi_device_old" == "notset" ] && [ "$1" == "stop" ] ; then
+  echo "Torclient never started"
+  exit 1
+fi
+IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_get wifi_ssid)"
+ynh_multissid=$(moulinette_get multissid)
+for i in $(seq 0 $((${ynh_multissid} - 1))); do
+  if [ "${ynh_wifi_ssid[$i]}" == "${torclient_wifi_ssid}" ] ; then
+    torclient_wifi_device="ssid${i}"
+    echo "Torclient will be active on $torclient_wifi_device device and $torclient_wifi_ssid SSID"
+    break
+  fi
+  echo "SSID not found for torclient"
+  exit 1
+done	
 
 echo "OK"
 
@@ -119,70 +204,23 @@ echo "OK"
 
 case "$1" in
   start)
-    if is_running; then
-      echo "Already started"
-    else
-      echo "[torclient] Starting..."
-      touch /tmp/.ynh-tor-started
-
-      # Run tor
-      if ! is_tor_running; then
-        echo "Run Tor"
-        start_tor
-      fi
-
-      # Set ipv4 NAT
-      if ! is_nat_set; then
-        echo "Set NAT settings"
-        set_nat
-      fi
-    fi
-  ;;
+    do_start
+    ;;
   stop)
-    if ! is_running; then
-      echo "Already stoped"
-    else
-      echo "[torclient] Stopping..."
-      rm /tmp/.ynh-tor-started
-    
-      if is_nat_set; then
-        echo "Unset NAT"
-        unset_nat
-      fi
-  
-      if is_tor_running; then
-        echo "Stop Tor"
-        stop_tor
-      fi
-    
-      if has_vpnclient_app; then
-        service ynh-vpnclient start
-      fi
-    fi
-  ;;
+    do_stop
+    ;;
+  restart)
+    do_stop
+    do_start
+    ;;
   status)
-    exitcode=0
-
-    if is_tor_running; then
-      echo "[OK] Tor is running"
-    else
-      echo "[ERR] Tor is not running"
-      exitcode=1
-    fi
-
-    if is_nat_set; then
-      echo "[OK] IPv4 nat rules set"
-    else
-      echo "[ERR] No IPv4 nat rules not set"
-      exitcode=1
-    fi
-
-    exit ${exitcode}
-  ;;
+    do_status
+    ;;
   *)
-    echo "Usage: $0 {start|stop|status}"
+    echo "Usage: $0 {start|stop|restart|status}"
     exit 1
   ;;
 esac
+
 
 exit 0

@@ -1,5 +1,9 @@
 <?php
 
+function moulinette_get_hotspot($var) {
+  return htmlspecialchars(exec('sudo yunohost app setting hotspot '.escapeshellarg($var)));
+}
+
 function moulinette_get($var) {
   return htmlspecialchars(exec('sudo yunohost app setting torclient '.escapeshellarg($var)));
 }
@@ -12,8 +16,8 @@ function stop_service() {
   exec('sudo service ynh-torclient stop');
 }
 
-function start_service() {
-  exec('sudo service ynh-torclient start', $output, $retcode);
+function restart_service() {
+  exec('sudo service ynh-torclient restart', $output, $retcode);
 
   return $retcode;
 }
@@ -30,10 +34,23 @@ function service_faststatus() {
   return $retcode;
 }
 
+function getArray($str) {
+  return explode('|', $str);
+}
 
 dispatch('/', function() {
 
+  $wifi_ssid_list='';
+  $ssids = getArray(moulinette_get_hotspot('wifi_ssid'));
+  $wifi_ssid = moulinette_get('wifi_ssid');
+  foreach ($ssids as $ssid){
+    $active = ($ssid == $wifi_ssid) ? 'class="active"' : '';
+    $wifi_ssid_list .= "<li $active><a href='#'>$ssid</a></li>\n";
+  }
+  
+  set('wifi_ssid', $wifi_ssid);
   set('status', service_faststatus() == 0);
+  set('wifi_ssid_list', $wifi_ssid_list);
 
   return render('settings.html.php');
 });
@@ -43,9 +60,10 @@ dispatch_put('/settings', function() {
   $status = isset($_POST['status']) ? 1 : 0;
 
   moulinette_set('status', $status);
+  moulinette_set('wifi_ssid', $wifi_ssid);
 
   if($status == 1) {
-    $retcode = start_service();
+    $retcode = restart_service();
   } else {
     $retcode = stop_service();
   }
