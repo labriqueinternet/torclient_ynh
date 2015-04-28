@@ -83,8 +83,8 @@ sudo yunohost firewall allow --no-upnp TCP 9040
 
 # Set default inits
 #php-fpm is already installed by yunohost hotspot app
-sudo service php-fpm stop
-sudo service php-fpm start
+sudo service php5-fpm stop
+sudo service php5-fpm start
 sudo service nginx reload
 
 # Update SSO for vpnadmin
