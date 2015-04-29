@@ -39,7 +39,7 @@
     <?= $content?>
 
     <hr />
-    <div id="github"><a href="https://github.com/bleuchtang/torclient_ynh"><?= T_('Any problem? Contribute!') ?></a> - AGPL 3.0</div>
+    <div id="github"><a href="https://github.com/labriqueinternet/torclient_ynh"><?= T_('Any problem? Contribute!') ?></a> - AGPL 3.0</div>
   </div>
 </body>
 </html>
