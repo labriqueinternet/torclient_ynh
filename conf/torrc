@@ -23,7 +23,7 @@
 ## all (and only) requests that reach a SocksPort. Untrusted users who
 ## can access your SocksPort may be able to learn about the connections
 ## you make.
-SocksPolicy accept 10.0.242.0/24
+SocksPolicy accept <TPL:TOR_NETWORK>.0/24
 SocksPolicy reject *
 
 ## Logs go to stdout at level "notice" unless redirected by something
@@ -93,11 +93,11 @@ SocksPolicy reject *
 VirtualAddrNetwork 10.192.0.0/10
 Address ns0.ldn-fai.net
 DNSPort 9053
-DNSListenAddress 10.0.242.1
+DNSListenAddress <TPL:TOR_NETWORK>.1
 AutomapHostsOnResolve 1
 AutomapHostsSuffixes .exit,.onion
 TransPort 9040
-TransListenAddress 10.0.242.1
+TransListenAddress <TPL:TOR_NETWORK>.1
 
 ## If you have multiple network interfaces, you can specify one for
 ## outgoing traffic to use.

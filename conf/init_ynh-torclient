@@ -36,7 +36,6 @@ is_running() {
 }
 
 set_nat() {
-
   iptables -t nat -A PREROUTING -i ${torclient_wifi_device} -p udp --dport 53 -j REDIRECT --to-ports 9053
   iptables -t nat -A PREROUTING -i ${torclient_wifi_device} -p tcp ! --dport 53 --syn -j REDIRECT --to-ports 9040
 }
@@ -58,6 +57,8 @@ stop_tor() {
 }
 
 start_tor() {
+  cp /etc/tor/torrc.tpl /etc/tor/torrc
+  sed "s|<TPL:TOR_NETWORK>|${torclient_wifi_prefix}|g" -i /etc/tor/torrc
   service tor start
 }
 
@@ -187,6 +188,7 @@ if [ "$torclient_wifi_device_old" == "notset" ] && [ "$1" == "stop" ] ; then
   exit 1
 fi
 IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_get wifi_ssid)"
+IFS='|' read -a ynh_wifi_prefix <<< "$(moulinette_get ip4_nat_prefix)"
 ynh_multissid=$(moulinette_get multissid)
 for i in $(seq 0 $((${ynh_multissid} - 1))); do
   if [ ${ynh_wifi_ssid[$i]} == ${torclient_wifi_ssid} ] ; then
@@ -195,6 +197,7 @@ for i in $(seq 0 $((${ynh_multissid} - 1))); do
     else
       torclient_wifi_device="hotspot${i}"
     fi
+    torclient_wifi_prefix=${ynh_wifi_prefix[$i]}
 
     echo "Torclient will be active on $torclient_wifi_device device and $torclient_wifi_ssid SSID"
     break
