@@ -190,7 +190,12 @@ IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_get wifi_ssid)"
 ynh_multissid=$(moulinette_get multissid)
 for i in $(seq 0 $((${ynh_multissid} - 1))); do
   if [ ${ynh_wifi_ssid[$i]} == ${torclient_wifi_ssid} ] ; then
-    torclient_wifi_device="ssid${i}"
+    if [ ${i} -eq 0 ]; then
+      torclient_wifi_device=$(moulinette_get wifi_device)
+    else
+      torclient_wifi_device="hotspot${i}"
+    fi
+
     echo "Torclient will be active on $torclient_wifi_device device and $torclient_wifi_ssid SSID"
     break
   fi
