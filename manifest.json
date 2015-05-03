@@ -27,8 +27,8 @@
             "en": "Choose a path for the web administration",
             "fr": "Choissez un chemin pour l'administration web"
         },
-        "example": "/torclient",
-        "default": "/torclient"
+        "example": "/torclientadmin",
+        "default": "/torclientadmin"
       }
     ]
   }
