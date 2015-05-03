@@ -42,14 +42,20 @@ dispatch('/', function() {
 
   $wifi_ssid_list='';
   $ssids = getArray(moulinette_get_hotspot('wifi_ssid'));
-  $wifi_ssid = moulinette_get('wifi_ssid');
+  $multissid = moulinette_get_hotspot('multissid');
+  $wifi_num = moulinette_get('wifi_num');
 
-  foreach ($ssids as $ssid){
-    $active = ($ssid == $wifi_ssid) ? 'class="active"' : '';
-    $wifi_ssid_list .= "<li $active><a href='#'>$ssid</a></li>\n";
+  for($i = 0; $i < $multissid; $i++) {
+    $active = ($i == $wifi_num) ? 'class="active"' : '';
+    $wifi_ssid_list .= "<li $active><a href='#'>$ssids[$i]</a></li>\n";
   }
   
-  set('wifi_ssid', $wifi_ssid);
+  if($wifi_num == -1) {
+    $ssid="";
+  } else {
+    $ssid=$ssids[$wifi_num];
+  }
+  set('wifi_ssid', $ssid);
   set('status', service_faststatus() == 0);
   set('wifi_ssid_list', $wifi_ssid_list);
 
@@ -59,7 +65,16 @@ dispatch('/', function() {
 dispatch_put('/settings', function() {
 
   $status = isset($_POST['status']) ? 1 : 0;
+  $ssids = getArray(moulinette_get_hotspot('wifi_ssid'));
   $wifi_ssid = $_POST['wifi_ssid'];
+  $interfaces = getArray(moulinette_get_hotspot('wifi_ssid'));
+  $multissid = moulinette_get_hotspot('multissid');
+
+  for($i = 0; $i < $multissid; $i++) {
+    if($ssids[$i] == $wifi_ssid) {
+      moulinette_set('wifi_num', $i);
+    }
+  }
 
   moulinette_set('status', $status);
   moulinette_set('wifi_ssid', $wifi_ssid);

@@ -121,7 +121,7 @@ do_start() {
       set_nat
     fi
   fi
-  moulinette_set wifi_device_old $torclient_wifi_device
+  moulinette_set wifi_num_old $torclient_wifi_num
 }
 
 do_stop() {
@@ -177,41 +177,41 @@ fi
 
 echo "Retrieving Yunohost settings... "
 
-torclient_wifi_ssid=$(moulinette_torclient_get wifi_ssid)
-torclient_wifi_device_old=$(moulinette_torclient_get wifi_device_old)
-if [ "$torclient_wifi_ssid" == "notset" ] ; then
-  echo "[ERR] Essid is not set for torclient"
+torclient_wifi_num=$(moulinette_torclient_get wifi_num)
+if [ "$torclient_wifi_num" == "-1" ] ; then
+  echo "[ERR] SSID is not set for torclient"
   exit 1
 fi
-if [ "$torclient_wifi_device_old" == "notset" ] && [ "$1" == "stop" ] ; then
+if [ ${torclient_wifi_num} -eq 0 ]; then
+  torclient_wifi_device=$(moulinette_get wifi_device)
+else
+  torclient_wifi_device="hotspot${torclient_wifi_num}"
+fi
+if [ ! $torclient_wifi_device ] ; then
+  echo "[ERR] Device not found for torclient"
+  exit 1
+fi
+
+torclient_wifi_num_old=$(moulinette_torclient_get wifi_num_old)
+if [ ${torclient_wifi_num_old} -eq 0 ]; then
+  torclient_wifi_device_old=$(moulinette_get wifi_device)
+else
+  torclient_wifi_device_old="hotspot${torclient_wifi_num_old}"
+fi
+if [ ! $torclient_wifi_device_old ] ; then
+  echo "[ERR] Old device not found for torclient"
+  exit 1
+fi
+if [ "$torclient_wifi_num_old" == "-1" ] && [ "$1" == "stop" ] ; then
   echo "Torclient never started"
   exit 1
 fi
+
 IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_get wifi_ssid)"
 IFS='|' read -a ynh_wifi_prefix <<< "$(moulinette_get ip4_nat_prefix)"
-ynh_multissid=$(moulinette_get multissid)
-for i in $(seq 0 $((${ynh_multissid} - 1))); do
-  if [ ${ynh_wifi_ssid[$i]} == ${torclient_wifi_ssid} ] ; then
-    if [ ${i} -eq 0 ]; then
-      torclient_wifi_device=$(moulinette_get wifi_device)
-    else
-      torclient_wifi_device="hotspot${i}"
-    fi
-    torclient_wifi_prefix=${ynh_wifi_prefix[$i]}
-
-    echo "Torclient will be active on $torclient_wifi_device device and $torclient_wifi_ssid SSID"
-    break
-  fi
-done
-
-if [ ! $torclient_wifi_device ] ; then
-  echo "[ERR] SSID not found for torclient"
-  exit 1
-fi
-
-echo "OK"
-
-# Script
+torclient_wifi_prefix=${ynh_wifi_prefix[$torclient_wifi_num]}
+torclient_wifi_ssid=${ynh_wifi_ssid[$torclient_wifi_num]}
+echo "Torclient will be active on $torclient_wifi_device device and $torclient_wifi_ssid SSID with $torclient_wifi_prefix prefix"
 
 case "$1" in
   start)

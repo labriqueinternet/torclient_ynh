@@ -94,8 +94,8 @@ sudo yunohost app ssowatconf
 sudo service tor stop
 sudo insserv -r tor
 #sudo service ynh-torclient start
-sudo yunohost app setting torclient wifi_ssid -v notset
-sudo yunohost app setting torclient wifi_device_old -v notset
+sudo yunohost app setting torclient wifi_num -v -1
+sudo yunohost app setting torclient wifi_num_old -v -1
 
 # Start tor client at boot 
 sudo insserv ynh-torclient
