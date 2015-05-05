@@ -38,7 +38,6 @@ gpg --keyserver keys.gnupg.net --recv 886DDD89
 gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
 
 # Install packages
-#packages='privoxy tor php5-fpm'
 packages='tor php5-fpm'
 sudo apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get --assume-yes --force-yes install ${packages}
@@ -77,7 +76,7 @@ sudo sed "s|<TPL:NGINX_LOCATION>|${url_path}|g" -i /var/www/torclient/config.php
 # Copy init script
 sudo install -o root -g root -m 0755 ../conf/init_ynh-torclient /etc/init.d/ynh-torclient
 
-# Update firewall for DHCP
+# Allow Tor ports in firewall
 sudo yunohost firewall allow --no-upnp UDP 9053
 sudo yunohost firewall allow --no-upnp TCP 9040
 
