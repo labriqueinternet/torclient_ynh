@@ -35,7 +35,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="wifi_ssid" class="col-sm-3 control-label"><?= T_('SSID') ?></label>
+            <label for="wifi_ssid" class="col-sm-3 control-label"><?= T_('Associated Hotspot') ?></label>
             <div class="col-sm-9 input-group-btn">
               <div class="input-group">
                   <input type="text" name="wifi_ssid" id="wifi_ssid" value="<?= $wifi_ssid ?>" style="display: none" />
