@@ -1,6 +1,6 @@
 <?php
 
-function moulinette_get_hotspot($var) {
+function moulinette_hotspot_get($var) {
   return htmlspecialchars(exec('sudo yunohost app setting hotspot '.escapeshellarg($var)));
 }
 
@@ -16,8 +16,8 @@ function stop_service() {
   exec('sudo service ynh-torclient stop');
 }
 
-function restart_service() {
-  exec('sudo service ynh-torclient restart', $output, $retcode);
+function start_service() {
+  exec('sudo service ynh-torclient start', $output, $retcode);
 
   return $retcode;
 }
@@ -34,61 +34,56 @@ function service_faststatus() {
   return $retcode;
 }
 
-function getArray($str) {
-  return explode('|', $str);
-}
-
 dispatch('/', function() {
+  $ssids = explode('|', moulinette_hotspot_get('wifi_ssid'));
+  $wifi_device_id = moulinette_get('wifi_device_id');
+  $wifi_ssid_list = '';
+  $wifi_ssid = '';
 
-  $wifi_ssid_list='';
-  $ssids = getArray(moulinette_get_hotspot('wifi_ssid'));
-  $multissid = moulinette_get_hotspot('multissid');
-  $wifi_num = moulinette_get('wifi_num');
+  for($i = 0; $i < count($ssids); $i++) {
+    $active = '';
 
-  for($i = 0; $i < $multissid; $i++) {
-    $active = ($i == $wifi_num) ? 'class="active"' : '';
-    $wifi_ssid_list .= "<li $active><a href='#'>$ssids[$i]</a></li>\n";
+    if($i == $wifi_device_id) {
+      $active = 'class="active"';
+      $wifi_ssid = htmlentities($ssids[$i]);
+    }
+
+    $wifi_ssid_list .= "<li $active data-device-id='$i'><a href='javascript:;'>".htmlentities($ssids[$i]).'</a></li>';
   }
-  
-  if($wifi_num == -1) {
-    $ssid="";
-  } else {
-    $ssid=$ssids[$wifi_num];
+
+  if(empty($wifi_ssid)) {
+    $wifi_ssid = '<em>'.T_("None").'</em>';
   }
-  set('wifi_ssid', $ssid);
-  set('status', service_faststatus() == 0);
+
+  set('faststatus', service_faststatus() == 0);
+  set('service_enabled', moulinette_get('service_enabled'));
+  set('wifi_device_id', $wifi_device_id);
+  set('wifi_ssid', $wifi_ssid);
   set('wifi_ssid_list', $wifi_ssid_list);
 
   return render('settings.html.php');
 });
 
 dispatch_put('/settings', function() {
+  $service_enabled = isset($_POST['service_enabled']) ? 1 : 0;
 
-  $status = isset($_POST['status']) ? 1 : 0;
-  $ssids = getArray(moulinette_get_hotspot('wifi_ssid'));
-  $wifi_ssid = $_POST['wifi_ssid'];
-  $interfaces = getArray(moulinette_get_hotspot('wifi_ssid'));
-  $multissid = moulinette_get_hotspot('multissid');
+  stop_service();
 
-  for($i = 0; $i < $multissid; $i++) {
-    if($ssids[$i] == $wifi_ssid) {
-      moulinette_set('wifi_num', $i);
+  moulinette_set('service_enabled', $service_enabled);
+
+  if($service_enabled == 1) {
+    moulinette_set('wifi_device_id', $_POST['wifi_device_id']);
+
+     $retcode = start_service();
+
+    if($retcode == 0) {
+      flash('success', T_('Configuration updated and service successfully reloaded'));
+    } else {
+      flash('error', T_('Configuration updated but service reload failed'));
     }
-  }
 
-  moulinette_set('status', $status);
-  moulinette_set('wifi_ssid', $wifi_ssid);
-
-  if($status == 1) {
-    $retcode = restart_service();
   } else {
-    $retcode = stop_service();
-  }
-
-  if($retcode == 0) {
-    flash('success', T_('Configuration updated and service successfully reloaded'));
-  } else {
-    flash('error', T_('Configuration updated but service reload failed'));
+      flash('success', T_('Service successfully disabled'));
   }
 
   redirect:

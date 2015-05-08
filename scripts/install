@@ -43,7 +43,8 @@ sudo apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get --assume-yes --force-yes install ${packages}
 
 # Save arguments
-#sudo yunohost app setting torclient server_name -v "${server_name}"
+sudo yunohost app setting torclient service_enabled -v 0
+sudo yunohost app setting torclient wifi_device_id -v 0
 
 sudo install -o root -g root -m 0644 ../conf/torrc /etc/tor/torrc.tpl
 sudo install -b -o root -g root -m 0644 ../conf/nginx_torclient.conf "/etc/nginx/conf.d/${domain}.d/torclient.conf"
@@ -89,14 +90,11 @@ sudo service nginx reload
 # Update SSO for vpnadmin
 sudo yunohost app ssowatconf
 
-# Stop tor client
-sudo service tor stop
+# Set default inits
+sudo service tor stop &> /dev/null
 sudo insserv -r tor
-#sudo service ynh-torclient start
-sudo yunohost app setting torclient wifi_num -v -1
-sudo yunohost app setting torclient wifi_num_old -v -1
 
-# Start tor client at boot 
 sudo insserv ynh-torclient
+sudo service torclient start
 
 exit 0

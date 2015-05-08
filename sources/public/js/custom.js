@@ -18,14 +18,14 @@ $(document).ready(function() {
     var items = menu.children();
     var button = menu.prev();
     var input = button.prev();
-
+  
     items.removeClass('active');
     $(this).addClass('active');
-
+  
     button.text($(this).text());
     button.append(' <span class="caret"></span>');
-
-    input.attr('value', $(this).text());
+  
+    input.val($(this).data('device-id'));
   });
 
   $('.switch').bootstrapToggle();

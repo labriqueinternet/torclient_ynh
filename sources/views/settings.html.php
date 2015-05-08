@@ -1,5 +1,5 @@
 <h2><?= T_("Tor client configuration") ?></h2>
-<?php if($status): ?>
+<?php if($faststatus): ?>
   <span class="label label-success" data-toggle="tooltip" data-title="<?= T_('This is a fast status. Click on More details to show the complete status.') ?>"><?= T_('Running') ?></span>
 <?php else: ?>
   <span class="label label-danger" data-toggle="tooltip" data-title="<?= T_('This is a fast status. Click on More details to show the complete status.') ?>"><?= T_('Not Running') ?></span>
@@ -21,31 +21,33 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><?= T_("Wifi") ?></h3>
+          <h3 class="panel-title"><?= T_("Service") ?></h3>
         </div>
 
         <div style="padding: 14px 14px 0 10px">
   
           <div class="form-group">
-            <label for="tro_active" class="col-sm-3 control-label"><?= T_('Active') ?></label>
-            <div class="col-sm-9 input-group-btn" data-toggle="tooltip" data-title="<?= T_('set tor enable or disable') ?>">
+            <label for="service_enabled" class="col-sm-3 control-label"><?= T_('Tor Enabled') ?></label>
+            <div class="col-sm-9 input-group-btn">
               <div class="input-group">
-                <input type="checkbox" class="form-control switch" name="status" id="status" value="1" <?= $status == 1 ? 'checked="checked"' : '' ?> />
+                <input type="checkbox" class="form-control switch" name="service_enabled" id="service_enabled" value="1" <?= $service_enabled == 1 ? 'checked="checked"' : '' ?> />
               </div>
             </div>
           </div>
+
           <div class="form-group">
-            <label for="wifi_ssid" class="col-sm-3 control-label"><?= T_('Associated Hotspot') ?></label>
+            <label for="wifi_device_id" class="col-sm-3 control-label"><?= T_('Associated Hotspot') ?></label>
             <div class="col-sm-9 input-group-btn">
               <div class="input-group">
-                  <input type="text" name="wifi_ssid" id="wifi_ssid" value="<?= $wifi_ssid ?>" style="display: none" />
+                  <input type="text" name="wifi_device_id" id="wifi_device_id" value="<?= $wifi_device_id ?>" style="display: none" />
                   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?= $wifi_ssid ?> <span class="caret"></span></button>
-                  <ul class="dropdown-menu dropdown-menu-left" role="menu">
+                  <ul class="dropdown-menu dropdown-menu-left" id="deviceidlist" role="menu">
                     <?= $wifi_ssid_list ?>
                   </ul>
               </div>
             </div>
           </div>
+
 	</div>
       </div>
       <div class="form-group">

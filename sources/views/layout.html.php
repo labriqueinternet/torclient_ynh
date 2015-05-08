@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Wifi Hotspot <? echo (isset($title)) ? "| ".$title : "" ?></title>
+  <title><?= T_("Tor Client") ?> <?= isset($title) ? "| $title" : '' ?></title>
   <meta name="viewport" content="width=device-width">
   <link media="all" type="text/css" href="<?= PUBLIC_DIR ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link media="all" type="text/css" href="<?= PUBLIC_DIR ?>/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
@@ -19,22 +19,22 @@
 </head>
 <body>
   <div class="container">
-    <? if(isset($flash['error'])): ?>
+    <?php if(isset($flash['error'])): ?>
       <div class="alert alert-dismissible alert-danger fade in" style="margin-top: 20px" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <strong><?= T_('Error') ?>:</strong> <?= $flash['error'] ?>
       </div>
-    <? elseif(isset($flash['notice'])): ?>
+    <?php elseif(isset($flash['notice'])): ?>
       <div class="alert alert-dismissible alert-info fade in" style="margin-top: 20px" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <strong><?= T_('Notice') ?>:</strong> <?= $flash['notice'] ?>
       </div>
-    <? elseif(isset($flash['success'])): ?>
+    <?php elseif(isset($flash['success'])): ?>
       <div class="alert alert-dismissible alert-success fade in" style="margin-top: 20px" role="alert">
         <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <?= $flash['success'] ?>
       </div>
-    <? endif; ?>
+    <?php endif; ?>
 
     <?= $content?>
 
