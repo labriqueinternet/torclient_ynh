@@ -32,7 +32,7 @@ sudo yunohost firewall disallow UDP 9053
 sudo yunohost firewall disallow TCP 9040
 
 # Remove confs
-sudo rm -rf /etc/tor*
+sudo rm -f /etc/tor/torrc.tpl
 sudo rm -f /etc/nginx/conf.d/${domain}.d/torclient.conf
 sudo rm -f /etc/php5/fpm/pool.d/torclient.conf
 

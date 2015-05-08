@@ -128,7 +128,7 @@ do_start() {
 
 do_stop() {
   echo "[torclient] Stopping..."
-  rm /tmp/.ynh-torclient-started
+  rm -f /tmp/.ynh-torclient-started
 
   if is_nat_set; then
     echo "Unset NAT"
