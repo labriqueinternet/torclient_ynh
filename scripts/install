@@ -95,6 +95,6 @@ sudo service tor stop &> /dev/null
 sudo insserv -r tor
 
 sudo insserv ynh-torclient
-sudo service torclient start
+sudo service ynh-torclient start
 
 exit 0
