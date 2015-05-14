@@ -1,7 +1,5 @@
 # Tor Client
 
-**Warning: work in progress**
-
 Tor Client app for [YunoHost](http://yunohost.org/).
 
 * Install a Tor connection on your self-hosted server.
