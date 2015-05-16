@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Tor Client app for YunoHost 
+# Tor Client app for YunoHost
 # Copyright (C) 2015 Emile Morel <emile@bleuchtang.fr>
 # Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
 # Contribute at https://github.com/bleuchtang/torclient_ynh
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,7 +29,7 @@ if [ ! $? -eq 0 ]; then
 fi
 
 if [ ! -e /tmp/.ynh-hotspot-started ]; then
-  echo "hotspot not started and/or not installed" 
+  echo "hotspot not started and/or not installed"
 fi
 
 echo 'deb http://deb.torproject.org/torproject.org wheezy main' | sudo tee "/etc/apt/sources.list.d/torproject.list"
@@ -75,7 +75,8 @@ sudo sed 's|^;\?\s*max_execution_time.\+|max_execution_time = 600|' -i /etc/php5
 sudo sed "s|<TPL:NGINX_LOCATION>|${url_path}|g" -i /var/www/torclient/config.php
 
 # Copy init script
-sudo install -o root -g root -m 0755 ../conf/init_ynh-torclient /etc/init.d/ynh-torclient
+sudo install -o root -g root -m 0755 ../conf/ynh-torclient /usr/local/bin/
+sudo install -o root -g root -m 0755 ../conf/ynh-torclient.service /lib/systemd/system/ynh-torclient.service
 
 # Allow Tor ports in firewall
 sudo yunohost firewall allow --no-upnp UDP 9053
