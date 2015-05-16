@@ -83,18 +83,17 @@ sudo yunohost firewall allow --no-upnp TCP 9040
 
 # Set default inits
 #php-fpm is already installed by yunohost hotspot app
-sudo service php5-fpm stop
-sudo service php5-fpm start
-sudo service nginx reload
+sudo systemctl restart php5-fpm --quiet
+sudo systemctl reload nginx --quiet
 
 # Update SSO for vpnadmin
 sudo yunohost app ssowatconf
 
 # Set default inits
-sudo service tor stop &> /dev/null
-sudo insserv -r tor
+sudo systemctl stop tor --quiet &> /dev/null
+sudo systemctl disable tor --quiet
 
-sudo insserv ynh-torclient
-sudo service ynh-torclient start
+sudo systemctl reenable ynh-torclient --quiet
+sudo systemctl start  ynh-torclient --quiet
 
 exit 0

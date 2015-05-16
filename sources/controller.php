@@ -13,23 +13,23 @@ function moulinette_set($var, $value) {
 }
 
 function stop_service() {
-  exec('sudo service ynh-torclient stop');
+  exec('sudo systemctl stop ynh-torclient --quiet');
 }
 
 function start_service() {
-  exec('sudo service ynh-torclient start', $output, $retcode);
+  exec('sudo systemctl start ynh-torclient --quiet', $output, $retcode);
 
   return $retcode;
 }
 
 function service_status() {
-  exec('sudo service ynh-torclient status', $output);
+  exec('sudo systemctl is-active ynh-torclient --quiet', $output);
 
   return $output;
 }
 
 function service_faststatus() {
-  exec('sudo service ynh-torclient status', $output, $retcode);
+  exec('sudo systemctl is-active ynh-torclient --quiet', $output, $retcode);
 
   return $retcode;
 }
