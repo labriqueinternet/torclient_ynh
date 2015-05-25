@@ -22,10 +22,9 @@
 domain=$(sudo yunohost app setting torclient domain)
 
 # The End
-sudo systemctl stop ynh-torclient --quiet
-sudo systemctl disable ynh-torclient --quiet
-sudo yunohost service remove ynh-torclient
-sudo rm -f /lib/systemd/system/ynh-torclient.service /usr/local/bin/ynh-torclient
+sudo systemctl stop ynh-torclient
+sudo systemctl disable ynh-torclient
+sudo rm -f /etc/systemd/system/ynh-torclient.service /usr/local/bin/ynh-torclient
 sudo rm -f /tmp/.ynh-torclient-*
 
 # Update firewall for DHCP
@@ -38,9 +37,8 @@ sudo rm -f /etc/nginx/conf.d/${domain}.d/torclient.conf
 sudo rm -f /etc/php5/fpm/pool.d/torclient.conf
 
 # Restart services
-sudo yunohost service stop php5-fpm
-sudo yunohost service start php5-fpm
-sudo systemctl reload nginx --quiet
+sudo systemctl restart php5-fpm
+sudo systemctl reload nginx
 
 # Remove sources
 sudo rm -rf /var/www/torclient/

@@ -13,23 +13,23 @@ function moulinette_set($var, $value) {
 }
 
 function stop_service() {
-  exec('sudo systemctl stop ynh-torclient --quiet');
+  exec('sudo systemctl stop ynh-torclient');
 }
 
 function start_service() {
-  exec('sudo systemctl start ynh-torclient --quiet', $output, $retcode);
+  exec('sudo systemctl start ynh-torclient', $output, $retcode);
 
   return $retcode;
 }
 
 function service_status() {
-  exec('sudo systemctl is-active ynh-torclient --quiet', $output);
+  exec('sudo ynh-torclient status', $output);
 
   return $output;
 }
 
 function service_faststatus() {
-  exec('sudo systemctl is-active ynh-torclient --quiet', $output, $retcode);
+  exec('sudo systemctl is-active ynh-torclient', $output, $retcode);
 
   return $retcode;
 }
@@ -51,10 +51,6 @@ dispatch('/', function() {
     $wifi_ssid_list .= "<li $active data-device-id='$i'><a href='javascript:;'>".htmlentities($ssids[$i]).'</a></li>';
   }
 
-  if(empty($wifi_ssid)) {
-    $wifi_ssid = '<em>'.T_("None").'</em>';
-  }
-
   set('faststatus', service_faststatus() == 0);
   set('service_enabled', moulinette_get('service_enabled'));
   set('wifi_device_id', $wifi_device_id);
@@ -66,6 +62,18 @@ dispatch('/', function() {
 
 dispatch_put('/settings', function() {
   $service_enabled = isset($_POST['service_enabled']) ? 1 : 0;
+
+  if($service_enabled == 1) {
+    try {
+      if($_POST['wifi_device_id'] == -1) {
+        throw new Exception(T_('You need to select an associated hotspot'));
+      }
+
+    } catch(Exception $e) {
+      flash('error', $e->getMessage().' ('.T_('configuration not updated').').');
+      goto redirect;
+    }
+  }
 
   stop_service();
 

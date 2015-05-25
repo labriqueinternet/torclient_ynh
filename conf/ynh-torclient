@@ -33,7 +33,7 @@ is_nat_set() {
 }
 
 is_tor_running() {
-  systemctl is-active tor --quiet &> /dev/null
+  systemctl is-active tor &> /dev/null
 }
 
 is_running() {
@@ -58,7 +58,7 @@ unset_nat() {
 }
 
 stop_tor() {
-  systemctl stop tor --quiet &> /dev/null
+  systemctl stop tor
 }
 
 start_tor() {
@@ -66,20 +66,24 @@ start_tor() {
 
   sed "s|<TPL:TOR_NETWORK>|${ynh_wifi_prefix}|g" -i /etc/tor/torrc
 
-  systemctl start tor --quiet
+  systemctl start tor
 }
 
 ## Tools
 
 moulinette_get() {
   var=${1}
+  gotcha=0
 
-  value=$(yunohost app setting torclient "${var}")
+  while [ "${gotcha}" -eq 0 ]; do
+    value=$(yunohost app setting torclient "${var}")
 
-  if [[ "${value}" =~ "An instance is already running" ]]; then
-    echo "${value}" >&2
-    exit 1
-  fi
+    if [[ "${value}" =~ "An instance is already running" ]]; then
+      sleep $(($((RANDOM%5)) + 1))
+    else
+      gotcha=1
+    fi
+  done
 
   echo "${value}"
 }
@@ -98,13 +102,17 @@ moulinette_set() {
 
 moulinette_hotspot_get() {
   var=${1}
+  gotcha=0
 
-  value=$(yunohost app setting hotspot "${var}")
+  while [ "${gotcha}" -eq 0 ]; do
+    value=$(yunohost app setting hotspot "${var}")
 
-  if [[ "${value}" =~ "An instance is already running" ]]; then
-    echo "${value}" >&2
-    exit 1
-  fi
+    if [[ "${value}" =~ "An instance is already running" ]]; then
+      sleep $(($((RANDOM%5)) + 1))
+    else
+      gotcha=1
+    fi
+  done
 
   echo "${value}"
 }
@@ -179,33 +187,46 @@ do_status() {
   exit ${exitcode}
 }
 
-# Restart php5-fpm at the first start (it needs to be restarted after the slapd start)
-if [ ! -e /tmp/.ynh-torclient-boot ]; then
-  touch /tmp/.ynh-torclient-boot
-  systemctl restart php5-fpm --quiet
+if [ "$1" != restart ]; then
+
+  # Restart php5-fpm at the first start (it needs to be restarted after the slapd start)
+  if [ ! -e /tmp/.ynh-torclient-boot ]; then
+    touch /tmp/.ynh-torclient-boot
+    systemctl restart php5-fpm
+  fi
+
+  ynh_wifi_device_id=$(moulinette_get wifi_device_id)
+
+  if [[ ! "${1}" =~ stop ]]; then
+    exitcode=0
+
+    if [ "${ynh_wifi_device_id}" -eq -1 ]; then
+      echo "[WARN] You need to select an associated wifi hotspot (you can do it through the web admin)"
+      exitcode=1
+    fi
+
+    [ "${exitcode}" -ne 0 ] && exit ${exitcode}
+  fi
+
+  # Variables
+  
+  echo -n "Retrieving Yunohost settings... "
+  
+  ynh_service_enabled=$(moulinette_get service_enabled)
+  
+  if [ "${ynh_wifi_device_id}" -eq 0 ]; then
+    ynh_wifi_device=$(moulinette_hotspot_get wifi_device)
+  else
+    ynh_wifi_device="hotspot${ynh_wifi_device_id}"
+  fi
+
+  echo OK
+  
+  IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_hotspot_get wifi_ssid)"
+  IFS='|' read -a ynh_wifi_prefix <<< "$(moulinette_hotspot_get ip4_nat_prefix)"
+  ynh_wifi_prefix=${ynh_wifi_prefix[$ynh_wifi_device_id]}
+  ynh_wifi_ssid=${ynh_wifi_ssid[$ynh_wifi_device_id]}
 fi
-
-# Variables
-
-echo -n "Retrieving Yunohost settings... "
-
-ynh_service_enabled=$(moulinette_get service_enabled)
-ynh_wifi_device_id=$(moulinette_get wifi_device_id)
-
-if [ "${ynh_wifi_device_id}" -eq 0 ]; then
-  ynh_wifi_device=$(moulinette_hotspot_get wifi_device)
-else
-  ynh_wifi_device="hotspot${ynh_wifi_device_id}"
-fi
-
-echo OK
-
-IFS='|' read -a ynh_wifi_ssid <<< "$(moulinette_hotspot_get wifi_ssid)"
-IFS='|' read -a ynh_wifi_prefix <<< "$(moulinette_hotspot_get ip4_nat_prefix)"
-ynh_wifi_prefix=${ynh_wifi_prefix[$ynh_wifi_device_id]}
-ynh_wifi_ssid=${ynh_wifi_ssid[$ynh_wifi_device_id]}
-
-#echo "Torclient will be active on $ynh_wifi_device device and $ynh_wifi_ssid SSID with $ynh_wifi_prefix prefix"
 
 case "$1" in
   start)
