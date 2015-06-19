@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Tor Client app for YunoHost 
+# Tor Client app for YunoHost
 # Copyright (C) 2015 Emile Morel <emile@bleuchtang.fr>
 # Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
 # Contribute at https://github.com/bleuchtang/torclient_ynh
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU Affero General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -29,7 +29,7 @@ if [ ! $? -eq 0 ]; then
 fi
 
 if [ ! -e /tmp/.ynh-hotspot-started ]; then
-  echo "hotspot not started and/or not installed" 
+  echo "hotspot not started and/or not installed"
 fi
 
 echo 'deb http://deb.torproject.org/torproject.org wheezy main' | sudo tee "/etc/apt/sources.list.d/torproject.list"
@@ -44,7 +44,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get --assume-yes --force-yes install ${p
 
 # Save arguments
 sudo yunohost app setting torclient service_enabled -v 0
-sudo yunohost app setting torclient wifi_device_id -v 0
+sudo yunohost app setting torclient wifi_device_id -v -1
 
 sudo install -o root -g root -m 0644 ../conf/torrc /etc/tor/torrc.tpl
 sudo install -b -o root -g root -m 0644 ../conf/nginx_torclient.conf "/etc/nginx/conf.d/${domain}.d/torclient.conf"
@@ -75,26 +75,30 @@ sudo sed 's|^;\?\s*max_execution_time.\+|max_execution_time = 600|' -i /etc/php5
 sudo sed "s|<TPL:NGINX_LOCATION>|${url_path}|g" -i /var/www/torclient/config.php
 
 # Copy init script
-sudo install -o root -g root -m 0755 ../conf/init_ynh-torclient /etc/init.d/ynh-torclient
+sudo install -o root -g root -m 0755 ../conf/ynh-torclient /usr/local/bin/
+sudo install -o root -g root -m 0644 ../conf/ynh-torclient.service /etc/systemd/system/
 
 # Allow Tor ports in firewall
 sudo yunohost firewall allow --no-upnp UDP 9053
 sudo yunohost firewall allow --no-upnp TCP 9040
 
 # Set default inits
-#php-fpm is already installed by yunohost hotspot app
-sudo service php5-fpm stop
-sudo service php5-fpm start
-sudo service nginx reload
+# The boot order of these services are important, so they are disabled by default
+# and the ynh-torclient service handles them.
+sudo systemctl disable tor
+sudo systemctl stop tor
 
-# Update SSO for vpnadmin
+sudo systemctl enable php5-fpm
+sudo systemctl restart php5-fpm
+
+sudo systemctl reload nginx
+
+sudo systemctl enable ynh-torclient
+sudo systemctl start ynh-torclient
+
+# Update SSO for torclient
 sudo yunohost app ssowatconf
 
-# Set default inits
-sudo service tor stop &> /dev/null
-sudo insserv -r tor
-
-sudo insserv ynh-torclient
-sudo service ynh-torclient start
+echo "WARNING: Tor Client is not started because you need to define an associated wifi hotspot through the web admin" >&2
 
 exit 0
