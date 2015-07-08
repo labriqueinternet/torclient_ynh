@@ -66,11 +66,11 @@ dispatch_put('/settings', function() {
   if($service_enabled == 1) {
     try {
       if($_POST['wifi_device_id'] == -1) {
-        throw new Exception(T_('You need to select an associated hotspot'));
+        throw new Exception(_('You need to select an associated hotspot'));
       }
 
     } catch(Exception $e) {
-      flash('error', $e->getMessage().' ('.T_('configuration not updated').').');
+      flash('error', $e->getMessage().' ('._('configuration not updated').').');
       goto redirect;
     }
   }
@@ -85,13 +85,13 @@ dispatch_put('/settings', function() {
      $retcode = start_service();
 
     if($retcode == 0) {
-      flash('success', T_('Configuration updated and service successfully reloaded'));
+      flash('success', _('Configuration updated and service successfully reloaded'));
     } else {
-      flash('error', T_('Configuration updated but service reload failed'));
+      flash('error', _('Configuration updated but service reload failed'));
     }
 
   } else {
-      flash('success', T_('Service successfully disabled'));
+      flash('success', _('Service successfully disabled'));
   }
 
   redirect:
@@ -121,18 +121,14 @@ dispatch('/status', function() {
 });
 
 dispatch('/lang/:locale', function($locale = 'en') {
-  switch ($locale) {
+  switch($locale) {
     case 'fr':
       $_SESSION['locale'] = 'fr';
-      break;
+    break;
 
     default:
       $_SESSION['locale'] = 'en';
   }
 
-  if(!empty($_GET['redirect_to'])) {
-    redirect_to($_GET['redirect_to']);
-  } else {
-    redirect_to('/');
-  }
+  redirect_to('/');
 });
