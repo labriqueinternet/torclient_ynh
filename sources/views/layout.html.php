@@ -1,17 +1,41 @@
 <!doctype html>
+
+<!--
+  Tor Client app for YunoHost 
+  Copyright (C) 2015 Émile Morel <emile@bleuchtang.fr>
+  Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
+  Contribute at https://github.com/labriqueinternet/torclient_ynh
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+  
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
 <!--[if IE 8]> <html class="no-js lt-ie9" lang="en"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="<?= $locale ?>"> <!--<![endif]-->
 <head>
+  <title><?= _("Tor Client") ?><?= isset($title) ? " | $title" : '' ?></title>
+
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title><?= _("Tor Client") ?><?= isset($title) ? " | $title" : '' ?></title>
   <meta name="viewport" content="width=device-width">
+
   <link media="all" type="text/css" href="<?= PUBLIC_DIR ?>/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link media="all" type="text/css" href="<?= PUBLIC_DIR ?>/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
   <link media="all" type="text/css" href="<?= PUBLIC_DIR ?>/css/bootstrap-toggle.min.css" rel="stylesheet">
   <link media="all" type="text/css" href="<?= PUBLIC_DIR ?>/css/style.css" rel="stylesheet">
+
   <script src="<?= PUBLIC_DIR ?>/jquery/jquery-2.1.1.min.js"></script>
   <script src="<?= PUBLIC_DIR ?>/bootstrap/js/bootstrap.min.js"></script>
   <script src="<?= PUBLIC_DIR ?>/js/bootstrap-toggle.min.js"></script>

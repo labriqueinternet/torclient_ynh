@@ -1,4 +1,24 @@
-<h2><?= _("Tor client configuration") ?></h2>
+<!--
+  Tor Client app for YunoHost 
+  Copyright (C) 2015 Émile Morel <emile@bleuchtang.fr>
+  Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
+  Contribute at https://github.com/labriqueinternet/torclient_ynh
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+  
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<h2><?= _("Tor Client Configuration") ?></h2>
 <?php if($faststatus): ?>
   <span class="label label-success" data-toggle="tooltip" data-title="<?= _('This is a fast status. Click on More details to show the complete status.') ?>"><?= _('Running') ?></span>
 <?php else: ?>

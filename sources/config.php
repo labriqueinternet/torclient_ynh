@@ -1,8 +1,9 @@
 <?php
 
-/* Wifi Hotspot app for YunoHost 
+/* Tor Client app for YunoHost 
+ * Copyright (C) 2015 Émile Morel <emile@bleuchtang.fr>
  * Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
- * Contribute at https://github.com/jvaubourg/hotspot_ynh
+ * Contribute at https://github.com/labriqueinternet/torclient_ynh
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
