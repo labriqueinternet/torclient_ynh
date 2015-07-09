@@ -1,87 +1,88 @@
-# French translations for PACKAGE package.
-# Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# French translations for data package
+# Traductions françaises du paquet data.
+# Copyright (C) 2015 THE data'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the data package.
 # Automatically generated, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: data 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-07-08 19:31+0200\n"
-"PO-Revision-Date: 2015-07-08 19:31+0200\n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2015-07-09 14:08+0100\n"
+"Last-Translator: samy boutayeb <samy@langues-etcetera.fr>\n"
 "Language-Team: none\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ASCII\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.7.7\n"
 
 #: sources/views/layout.html.php:9
 msgid "Tor Client"
-msgstr ""
+msgstr "Client Tor"
 
 #: sources/views/layout.html.php:25
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #: sources/views/layout.html.php:30 sources/views/settings.html.php:42
 msgid "Notice"
-msgstr ""
+msgstr "Notice"
 
 #: sources/views/layout.html.php:42
 msgid "Any problem? Contribute!"
-msgstr ""
+msgstr "Un souci ? Contribuez !"
 
 #: sources/views/settings.html.php:1
 msgid "Tor client configuration"
-msgstr ""
+msgstr "Configuration du client Tor"
 
 #: sources/views/settings.html.php:3 sources/views/settings.html.php:5
-msgid ""
-"This is a fast status. Click on More details to show the complete status."
-msgstr ""
+msgid "This is a fast status. Click on More details to show the complete status."
+msgstr "Ceci est un résumé du statut. Cliquez sur Plus de détails pour consulter l'intégralité du statut."
 
 #: sources/views/settings.html.php:3
 msgid "Running"
-msgstr ""
+msgstr "En cours d'exécution"
 
 #: sources/views/settings.html.php:5
 msgid "Not Running"
-msgstr ""
+msgstr "Eteint"
 
 #: sources/views/settings.html.php:8
 msgid "Loading complete status may take a few minutes. Be patient."
-msgstr ""
+msgstr "Le chargement du statut peut prendre quelques minutes. Soyez patient."
 
 #: sources/views/settings.html.php:8
 msgid "More details"
-msgstr ""
+msgstr "Plus de détails"
 
 #: sources/views/settings.html.php:24
 msgid "Service"
-msgstr ""
+msgstr "Service"
 
 #: sources/views/settings.html.php:30
 msgid "Tor Enabled"
-msgstr ""
+msgstr "Tor activé"
 
 #: sources/views/settings.html.php:42
 msgid "You need to select an associated hotspot."
-msgstr ""
+msgstr "Choisissez un point d'accès associé."
 
 #: sources/views/settings.html.php:46
 msgid "Associated Hotspot"
-msgstr ""
+msgstr "Point d'accès associé"
 
 #: sources/views/settings.html.php:50
 msgid "None"
-msgstr ""
+msgstr "Aucun"
 
 #: sources/views/settings.html.php:62
 msgid "Reloading may take a few minutes. Be patient."
-msgstr ""
+msgstr "Le rechargement peut prendre quelques minutes. Soyez patient."
 
 #: sources/views/settings.html.php:62
 msgid "Save and reload"
-msgstr ""
+msgstr "Sauvegarder et recharger"
