@@ -1,8 +1,6 @@
 # Tor Client
 ## Overview
 
-**Warning: work in progress**
-
 Tor Client app for [YunoHost](http://yunohost.org/).
 
 Install a Tor tunnel, for broadcasting it through a wifi hotspot.
