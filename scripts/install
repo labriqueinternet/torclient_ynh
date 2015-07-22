@@ -32,7 +32,7 @@ if [ ! -e /tmp/.ynh-hotspot-started ]; then
   echo "hotspot not started and/or not installed"
 fi
 
-echo 'deb http://deb.torproject.org/torproject.org wheezy main' | sudo tee "/etc/apt/sources.list.d/torproject.list"
+echo 'deb http://deb.torproject.org/torproject.org jessie main' | sudo tee "/etc/apt/sources.list.d/torproject.list"
 
 gpg --keyserver keys.gnupg.net --recv 886DDD89
 gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
