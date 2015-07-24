@@ -105,14 +105,14 @@ sudo systemctl restart php5-fpm
 sudo systemctl reload nginx
 
 sudo systemctl enable ynh-torclient
+sudo yunohost service add ynh-torclient
 
 if ! $upgrade; then
   sudo systemctl start ynh-torclient
 
-  sudo yunohost service add ynh-torclient
-  sudo yunohost app ssowatconf
-
   echo "WARNING: Tor Client is not started because you need to define an associated wifi hotspot through the web admin" >&2
 fi
+
+sudo yunohost app ssowatconf
 
 exit 0

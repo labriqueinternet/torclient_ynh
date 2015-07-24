@@ -24,6 +24,7 @@ domain=$(sudo yunohost app setting torclient domain)
 # The End
 sudo systemctl stop ynh-torclient
 sudo systemctl disable ynh-torclient
+sudo yunohost service remove ynh-torclient
 sudo rm -f /etc/systemd/system/ynh-torclient.service /usr/local/bin/ynh-torclient
 sudo rm -f /tmp/.ynh-torclient-*
 
