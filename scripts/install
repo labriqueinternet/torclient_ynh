@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # This is an upgrade?
-upgrade=$([ "$TORCLIENT_UPGRADE" == 1 ] && echo true || echo false)
+upgrade=$([ "${TORCLIENT_UPGRADE}" == 1 ] && echo true || echo false)
 
 # Retrieve arguments
 domain=${1}
@@ -56,6 +56,10 @@ if ! $upgrade; then
   sudo yunohost app setting torclient wifi_device_id -v -1
 
 fi
+
+# Save git commit
+gitcommit=$(git rev-parse HEAD)
+sudo yunohost app setting torclient gitcommit -v "${gitcommit}"
 
 sudo install -o root -g root -m 0644 ../conf/torrc /etc/tor/torrc.tpl
 sudo install -b -o root -g root -m 0644 ../conf/nginx_torclient.conf "/etc/nginx/conf.d/${domain}.d/torclient.conf"

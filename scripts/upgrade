@@ -11,7 +11,7 @@ domain=$(ynh_setting torclient domain)
 path=$(ynh_setting torclient path)
 
 export TORCLIENT_UPGRADE=1
-sudo bash /etc/yunohost/apps/torclient/scripts/remove
+sudo bash /etc/yunohost/apps/torclient/scripts/remove &> /dev/null
 bash ./install "${domain}" "${path}"
 
 sudo systemctl start ynh-torclient

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+gitcommit=$(sudo yunohost app setting torclient gitcommit)
+tmpdir=$(mktemp -dp /tmp/ torclient-restore-XXXXX)
+
+git clone https://github.com/labriqueinternet/torclient_ynh.git "${tmpdir}/"
+git --work-tree "${tmpdir}/" --git-dir "${tmpdir}/.git/" reset --hard "${gitcommit}"
+
+cd "${tmpdir}/scripts/"
+./upgrade 
+
+sudo rm -r "${tmpdir}/"
+
+exit 0
