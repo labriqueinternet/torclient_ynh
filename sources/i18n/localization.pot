@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-08 19:31+0200\n"
+"POT-Creation-Date: 2015-07-25 10:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,71 +17,91 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: sources/views/layout.html.php:9
+#: sources/views/layout.html.php:28
 msgid "Tor Client"
 msgstr ""
 
-#: sources/views/layout.html.php:25
+#: sources/views/layout.html.php:49
 msgid "Error"
 msgstr ""
 
-#: sources/views/layout.html.php:30 sources/views/settings.html.php:42
+#: sources/views/layout.html.php:54 sources/views/settings.html.php:62
 msgid "Notice"
 msgstr ""
 
-#: sources/views/layout.html.php:42
+#: sources/views/layout.html.php:66
 msgid "Any problem? Contribute!"
 msgstr ""
 
-#: sources/views/settings.html.php:1
-msgid "Tor client configuration"
+#: sources/views/settings.html.php:21
+msgid "Tor Client Configuration"
 msgstr ""
 
-#: sources/views/settings.html.php:3 sources/views/settings.html.php:5
+#: sources/views/settings.html.php:23 sources/views/settings.html.php:25
 msgid ""
 "This is a fast status. Click on More details to show the complete status."
 msgstr ""
 
-#: sources/views/settings.html.php:3
+#: sources/views/settings.html.php:23
 msgid "Running"
 msgstr ""
 
-#: sources/views/settings.html.php:5
+#: sources/views/settings.html.php:25
 msgid "Not Running"
 msgstr ""
 
-#: sources/views/settings.html.php:8
+#: sources/views/settings.html.php:28
 msgid "Loading complete status may take a few minutes. Be patient."
 msgstr ""
 
-#: sources/views/settings.html.php:8
+#: sources/views/settings.html.php:28
 msgid "More details"
 msgstr ""
 
-#: sources/views/settings.html.php:24
+#: sources/views/settings.html.php:44
 msgid "Service"
 msgstr ""
 
-#: sources/views/settings.html.php:30
+#: sources/views/settings.html.php:50
 msgid "Tor Enabled"
 msgstr ""
 
-#: sources/views/settings.html.php:42
+#: sources/views/settings.html.php:62
 msgid "You need to select an associated hotspot."
 msgstr ""
 
-#: sources/views/settings.html.php:46
+#: sources/views/settings.html.php:66
 msgid "Associated Hotspot"
 msgstr ""
 
-#: sources/views/settings.html.php:50
+#: sources/views/settings.html.php:70
 msgid "None"
 msgstr ""
 
-#: sources/views/settings.html.php:62
+#: sources/views/settings.html.php:82
 msgid "Reloading may take a few minutes. Be patient."
 msgstr ""
 
-#: sources/views/settings.html.php:62
+#: sources/views/settings.html.php:82
 msgid "Save and reload"
+msgstr ""
+
+#: sources/controller.php:88
+msgid "You need to select an associated hotspot"
+msgstr ""
+
+#: sources/controller.php:92
+msgid "configuration not updated"
+msgstr ""
+
+#: sources/controller.php:107
+msgid "Configuration updated and service successfully reloaded"
+msgstr ""
+
+#: sources/controller.php:109
+msgid "Configuration updated but service reload failed"
+msgstr ""
+
+#: sources/controller.php:113
+msgid "Service successfully disabled"
 msgstr ""
