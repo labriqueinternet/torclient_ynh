@@ -10,9 +10,19 @@ ynh_setting() {
 domain=$(ynh_setting torclient domain)
 path=$(ynh_setting torclient path)
 
+tmpdir=$(mktemp -dp /tmp/ torclient-upgrade-XXXXX)
+sudo cp -a /etc/yunohost/apps/torclient/settings.yml "${tmpdir}/"
+
 export TORCLIENT_UPGRADE=1
 sudo bash /etc/yunohost/apps/torclient/scripts/remove &> /dev/null
 bash ./install "${domain}" "${path}"
+
+gitcommit=$(ynh_setting torclient gitcommit)
+
+sudo cp -a "${tmpdir}/settings.yml" /etc/yunohost/apps/torclient/
+sudo rm -r "${tmpdir}/"
+
+sudo yunohost app setting torclient gitcommit -v "${gitcommit}"
 
 sudo systemctl start ynh-torclient
 
