@@ -45,6 +45,7 @@ sudo systemctl reload nginx
 sudo rm -rf /var/www/torclient/
 
 sudo rm -rf /etc/apt/sources.list.d/torproject.list
+sudo apt-key del 0xee8cbc9e886ddd89
 sudo apt-get update
 
 exit 0
