@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# TOR Client app for YunoHost
+# Tor Client app for YunoHost
 # Copyright (C) 2015 Julien Vaubourg <julien@vaubourg.com>
 # Contribute at https://github.com/labriqueinternet/torclient_ynh
 #

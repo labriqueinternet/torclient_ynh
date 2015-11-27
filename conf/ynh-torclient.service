@@ -1,5 +1,5 @@
 [Unit]
-Description=YunoHost TOR Client.
+Description=YunoHost Tor Client.
 Requires=ynh-hotspot.service
 After=ynh-hotspot.service
 
