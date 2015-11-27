@@ -1,9 +1,9 @@
 {
-  "name": "TOR Client",
+  "name": "Tor Client",
   "id": "torclient",
   "description": {
-    "en": "TOR Client",
-    "fr": "Client TOR"
+    "en": "Tor Client",
+    "fr": "Client Tor"
   },
   "license": "AGPL-3",
   "developer": {
