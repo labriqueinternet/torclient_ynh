@@ -12,3 +12,5 @@ This YunoHost app is a part of the "[La Brique Internet](http://labriqueinter.ne
 * Debian Jessie
 * YunoHost >= 2.2.0
 * [Hotspot app for YunoHost](https://github.com/labriqueinternet/hotspot_ynh)
+
+**[BUG REPORTS SHOULD BE OPEN HERE](https://dev.yunohost.org)**
