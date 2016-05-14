@@ -17,12 +17,8 @@ export TORCLIENT_UPGRADE=1
 sudo bash /etc/yunohost/apps/torclient/scripts/remove &> /dev/null
 bash ./install "${domain}" "${path}"
 
-gitcommit=$(ynh_setting torclient gitcommit)
-
 sudo cp -a "${tmpdir}/settings.yml" /etc/yunohost/apps/torclient/
 sudo rm -r "${tmpdir}/"
-
-sudo yunohost app setting torclient gitcommit -v "${gitcommit}"
 
 sudo systemctl start ynh-torclient
 

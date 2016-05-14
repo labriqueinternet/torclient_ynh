@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gitcommit=$(sudo yunohost app setting torclient gitcommit)
+gitcommit=$(sudo grep revision /etc/yunohost/apps/torclient/status.json | sed 's/.*"revision": "\([^"]\+\)".*/\1/')
 tmpdir=$(mktemp -dp /tmp/ torclient-restore-XXXXX)
 
 git clone https://github.com/labriqueinternet/torclient_ynh.git "${tmpdir}/"
