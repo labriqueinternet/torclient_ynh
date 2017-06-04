@@ -1,4 +1,8 @@
 # Tor Client
+## No more supported
+
+This app is no more supported. We plan to propose a new alternative for supporting a Tor Client on a Cube, but with more security and goals closer to the Tor project.
+
 ## Overview
 
 Tor Client app for [YunoHost](http://yunohost.org/).
